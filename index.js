@@ -1,57 +1,47 @@
-import "dotenv/config";
-import { Telegraf } from "telegraf";
-import { createServer } from "node:http";
+import express from "express";
+import helmet from "helmet";
+import { env } from "./src/config/env.js";
+import { bot } from "./src/bot/bot.js";
+import adminRoutes from "./src/admin/routes.js";
 
-const TOKEN = process.env.BOT_TOKEN;
+const app = express();
 
-if (!TOKEN) {
-  console.error("BOT_TOKEN is missing!");
-  process.exit(1);
-}
+app.use(helmet());
+app.use(express.json());
 
-const bot = new Telegraf(TOKEN);
-
-bot.start(async (ctx) => {
-  await ctx.reply(
-    "⚡ Добро пожаловать в NEON VPN!\n\n" +
-    "Быстрый и удобный VPN-сервис.\n\n" +
-    "Выбери действие:\n" +
-    "/plans — тарифы\n" +
-    "/help — помощь"
-  );
+app.get("/health", (req, res) => {
+  res.json({
+    success: true,
+    service: "NEON VPN",
+    status: "running",
+  });
 });
 
-bot.command("help", (ctx) => {
-  ctx.reply("⚡ NEON VPN\n\nПо вопросам подключения обратись в поддержку.");
+app.use("/api/admin", adminRoutes);
+
+app.use(express.static("public"));
+
+app.get("/admin", (req, res) => {
+  res.sendFile("admin.html", { root: "public" });
 });
 
-bot.command("plans", (ctx) => {
-  ctx.reply(
-    "💎 Тарифы NEON VPN\n\n" +
-    "Тарифы скоро появятся.\n" +
-    "Мы готовим запуск сервиса."
-  );
-});
-
-bot.on("text", (ctx) => {
-  if (ctx.message.text.startsWith("/")) return;
-  ctx.reply("⚡ NEON VPN получил твоё сообщение!");
-});
-
-const server = createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.end("NEON VPN is running");
-});
-
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => {
-  console.log(`NEON VPN server running on port ${PORT}`);
+const server = app.listen(env.PORT, () => {
+  console.log(`NEON VPN server running on port ${env.PORT}`);
 });
 
 bot.launch()
   .then(() => console.log("NEON VPN bot started"))
   .catch((error) => console.error("Bot error:", error));
 
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+async function shutdown() {
+  console.log("Shutting down NEON VPN...");
+
+  bot.stop("SHUTDOWN");
+
+  server.close(() => {
+    process.exit(0);
+  });
+}
+
+process.once("SIGINT", shutdown);
+process.once("SIGTERM", shutdown);
