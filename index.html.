@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEON VPN</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090b14;color:white;font-family:Arial,sans-serif;padding:24px}
+header{text-align:center;padding:30px 0}
+.logo{font-size:38px;font-weight:900;color:#a855f7}
+p{color:#a6a9bd}
+.card{background:#151827;border:1px solid #292e45;border-radius:18px;padding:22px;margin:18px 0}
+button{background:#9b5cff;color:white;border:0;border-radius:12px;padding:15px;width:100%;font-size:16px;font-weight:bold}
+.status{color:#fbbf24}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">NEON ⚡ VPN</div>
+<p>Твоя свобода в интернете</p>
+</header>
+<div class="card">
+<h2>Добро пожаловать!</h2>
+<p>Твой VPN-сервис нового поколения</p>
+<h3 class="status">● Ожидает подключения</h3>
+<button onclick="alert('Скоро здесь появится подключение VPN!')">Подключить VPN</button>
+</div>
+<div class="card">
+<h3>🌍 VPN-серверы</h3>
+<p>🇫🇮 Финляндия — скоро</p>
+<p>🇩🇪 Германия — скоро</p>
+<p>🇳🇱 Нидерланды — скоро</p>
+</div>
+<div class="card">
+<h3>⭐ Тарифы</h3>
+<p>FREE — Бесплатно</p>
+<p>PREMIUM — Скоро</p>
+</div>
+<div class="card">
+<h3>👤 Мой профиль</h3>
+<p>Добро пожаловать в NEON VPN!</p>
+</div>
+</body>
+</html>
